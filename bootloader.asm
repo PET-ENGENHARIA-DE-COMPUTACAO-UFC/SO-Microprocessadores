@@ -4,8 +4,8 @@ start: jmp boot
 
 ; Mensagens
 msg_welcome db "Welcome to AGOs-V!", 0ah, 0dh, 0h
-msg_error db "An error occurred loading the kernel!", 0ah, 0dh, 0h
-msg_sector_error db "An error occurred reading the sectors!", 0ah, 0dh, 0h
+msg_error db "An error occurred loading the kernel", 0ah, 0dh, 0h
+msg_sector_error db "An error occurred reading the sectors", 0ah, 0dh, 0h
 msg_debug db "Kernel loaded!", 0ah, 0dh, 0h
 msg_debug_read db "Reading sectors...", 0ah, 0dh, 0h
 
@@ -53,7 +53,7 @@ done:
 
 read_sectors:
     pusha 
-    mov cx, 2                  ; Número de setores a ler
+    mov cx, 3                  ; Número de setores a ler
     mov ch, 0				   ; Define leitura na track 0
     mov cl, 2                  ; Seta setor inicial 2
     mov dh, 0                  ; Seta cabeçote 0
