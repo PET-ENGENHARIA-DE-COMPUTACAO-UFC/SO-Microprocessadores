@@ -148,10 +148,21 @@ main_kernel:
 .compare_archive1:	
 	lodsb
 	scasb
-	jne .invalid_entry
+	jne .id_archive2
 	loop .compare_archive1
 	jmp execute_archive1
 
+.id_archive2:
+	mov si, buffer
+	mov di, archive2_name
+	mov cx, archive2_name_len
+.compare_archive2:	
+	lodsb
+	scasb
+	jne .invalid_entry
+	loop .compare_archive2
+	jmp execute_archive2
+	
 .invalid_entry:
     mov ax, 0x1301
     mov bh, 0
@@ -186,33 +197,52 @@ power_off:
     hlt
 	
 execute_archive1:
-	mov ax, 0x1301
-    mov bh, 0
-    mov bl, 0x0F
-    mov cx, msg_starting_archive1_len
-    mov bp, msg_starting_archive1
-    int 0x10
-	hlt
-	
-	
+    mov ax, 0x0000
+    mov es, ax          
+    mov bx, 0x3000      
+    mov ah, 0x02        
+    mov al, 2           
+    mov ch, 0           
+    mov cl, 4
+    mov dh, 0           
+    mov dl, 0x80        
+    int 0x13
+    
+    jmp 0x0000:0x3000
+    
+execute_archive2:
+    mov ax, 0x0000
+    mov es, ax          
+    mov bx, 0x4000      
+    mov ah, 0x02        
+    mov al, 2           
+    mov ch, 0           
+    mov cl, 6
+    mov dh, 0           
+    mov dl, 0x80        
+    int 0x13
+    
+    jmp 0x0000:0x4000
+    
 title db "Bem Vindo ao AGOs-V", 0
-archive1_name db "editor de texto", 0
-archive1_name_len equ 15
+archive1_name db "compor", 0
+archive1_name_len equ 6
 
-msg_invalid_entry db "Comando invalido!", 0
-msg_invalid_entry_len equ 17
+msg_invalid_entry db "Comando invalido", 0
+msg_invalid_entry_len equ 16
 
 end_system db "desligar", 0
 end_system_len equ 8
+
+msg_ending_system db "encerrado", 0
+msg_ending_system_len equ 9
 
 press_any_buttom db "Aperte qualquer botao para continuar", 0
 title_len1 equ 19
 title_len2 equ 36
 
-msg_ending_system db "Desligando o sistema", 0
-msg_ending_system_len equ 20
+archive2_name db "editor de texto", 0
+archive2_name_len equ 15
 
-msg_starting_archive1 db "Inicializando editor de texto!", 0
-msg_starting_archive1_len equ 30
 buffer times 16 db 0
 buffer_index db 0
